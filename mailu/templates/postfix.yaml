@@ -71,6 +71,10 @@ spec:
             value: {{ include "mailu.fullname" . }}-dovecot:2525
           - name: ANTISPAM_MILTER_ADDRESS
             value: {{ include "mailu.fullname" . }}-rspamd:11332
+          - name: ANTISPAM_ADDRESS
+            value: {{ include "mailu.fullname" . }}-rspamd
+          - name: IMAP_ADDRESS
+            value: {{ include "mailu.fullname" . }}-dovecot.{{ .Release.Namespace }}
           - name: ADMIN_ADDRESS
             value: {{ include "mailu.fullname" . }}-admin
           - name: FRONT_ADDRESS
@@ -95,6 +99,16 @@ spec:
           - name: RELAYPASSWORD
             value: "{{ .Values.external_relay.password }}"
           {{- end}}
+          {{- end}}
+          {{- if hasKey .Values "secretKeyRef" }}
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secretKeyRef.name }}
+                key: {{ .Values.secretKeyRef.key}}
+          {{- else }}
+          - name: SECRET_KEY
+            value: "{{ required "secretKey" .Values.secretKey }}"
           {{- end}}
         ports:
           - name: smtp

@@ -85,6 +85,8 @@ spec:
             value: {{ include "mailu.fullname" . }}-redis
           - name: WEBMAIL
             value: none
+          - name: SUBNET
+            value: {{ .Values.subnet }}
           {{ if hasKey .Values "secretKeyRef" }}
           - name: SECRET_KEY
             valueFrom:

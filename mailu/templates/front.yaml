@@ -73,6 +73,10 @@ spec:
             value: {{ include "mailu.fullname" . }}-admin.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
           - name: ANTISPAM_WEBUI_ADDRESS
             value: {{ include "mailu.fullname" . }}-rspamd.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}:11334
+          - name: ANTISPAM_ADDRESS
+            value: {{ include "mailu.fullname" . }}-rspamd.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+          - name: IMAP_ADDRESS
+            value: {{ include "mailu.fullname" . }}-dovecot.{{ .Release.Namespace }}
           - name: POSTMASTER
             value: {{ default "postmaster" .Values.postmaster }}
           - name: DOMAIN
@@ -120,6 +124,16 @@ spec:
           {{- end }}
           - name: SUBNET
             value: {{ .Values.subnet }}
+          {{- if hasKey .Values "secretKeyRef" }}
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secretKeyRef.name }}
+                key: {{ .Values.secretKeyRef.key}}
+          {{- else }}
+          - name: SECRET_KEY
+            value: "{{ required "secretKey" .Values.secretKey }}"
+          {{- end}}
         ports:
           - name: pop3
             protocol: TCP
