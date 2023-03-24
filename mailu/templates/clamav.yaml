@@ -36,7 +36,11 @@ spec:
       {{- end }}
       containers:
       - name: clamav
+        {{- if .Values.clamav.image.digest }}
+        image: {{ .Values.clamav.image.repository }}@{{ .Values.clamav.image.digest }}
+        {{- else }}
         image: {{ .Values.clamav.image.repository }}:{{ default .Values.mailuVersion .Values.clamav.image.tag }}
+        {{- end }}
         imagePullPolicy: Always
         {{- with .Values.clamav.containerSecurityContext }}
         securityContext:

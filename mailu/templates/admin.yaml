@@ -38,7 +38,11 @@ spec:
       {{- end }}
       containers:
       - name: admin
+        {{- if .Values.admin.image.digest }}
+        image: {{ .Values.admin.image.repository }}@{{ .Values.admin.image.digest }}
+        {{- else }}
         image: {{ .Values.admin.image.repository }}:{{ default .Values.mailuVersion .Values.admin.image.tag }}
+        {{- end }}
         imagePullPolicy: Always
         volumeMounts:
           - name: data

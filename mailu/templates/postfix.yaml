@@ -33,7 +33,11 @@ spec:
       {{- end }}
       containers:
       - name: postfix
+        {{- if .Values.postfix.image.digest }}
+        image: {{ .Values.postfix.image.repository }}@{{ .Values.postfix.image.digest }}
+        {{- else }}
         image: {{ .Values.postfix.image.repository }}:{{ default .Values.mailuVersion .Values.postfix.image.tag }}
+        {{- end }}
         imagePullPolicy: Always
         {{- with .Values.postfix.containerSecurityContext }}
         securityContext:

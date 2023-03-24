@@ -42,7 +42,11 @@ spec:
       {{- end }}
       containers:
       - name: front
+        {{- if .Values.dovecot.image.digest }}
+        image: {{ .Values.front.image.repository }}@{{ .Values.front.image.digest }}
+        {{- else }}
         image: {{ .Values.front.image.repository }}:{{ default .Values.mailuVersion .Values.front.image.tag }}
+        {{- end }}
         imagePullPolicy: Always
         {{- with .Values.front.containerSecurityContext }}
         securityContext:

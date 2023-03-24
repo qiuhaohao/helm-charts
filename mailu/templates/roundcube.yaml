@@ -35,7 +35,11 @@ spec:
       {{- end }}
       containers:
       - name: roundcube
+        {{- if .Values.roundcube.image.digest }}
+        image: {{ .Values.roundcube.image.repository }}@{{ .Values.roundcube.image.digest }}
+        {{- else }}
         image: {{ .Values.roundcube.image.repository }}:{{ default .Values.mailuVersion .Values.roundcube.image.tag }}
+        {{- end }}
         imagePullPolicy: Always
         {{- with .Values.roundcube.containerSecurityContext }}
         securityContext:

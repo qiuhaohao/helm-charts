@@ -35,7 +35,11 @@ spec:
       {{- end }}
       containers:
       - name: admin
+        {{- if .Values.dovecot.image.digest }}
+        image: {{ .Values.dovecot.image.repository }}@{{ .Values.dovecot.image.digest }}
+        {{- else }}
         image: {{ .Values.dovecot.image.repository }}:{{ default .Values.mailuVersion .Values.dovecot.image.tag }}
+        {{- end }}
         imagePullPolicy: Always
         {{- with .Values.dovecot.containerSecurityContext }}
         securityContext:

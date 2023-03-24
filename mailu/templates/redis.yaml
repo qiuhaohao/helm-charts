@@ -33,7 +33,11 @@ spec:
       {{- end }}
       containers:
       - name: redis
+        {{- if .Values.redis.image.digest }}
+        image: {{ .Values.redis.image.repository }}@{{ .Values.redis.image.digest }}
+        {{- else }}
         image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
+        {{- end }}
         imagePullPolicy: Always
         {{- with .Values.redis.containerSecurityContext }}
         securityContext:
